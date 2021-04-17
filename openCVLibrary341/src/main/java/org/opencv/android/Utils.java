@@ -46,7 +46,7 @@ public class Utils {
         }
     }
 
-    public static Mat loadResource(Context context, int resourceId) throws IOException
+    public static Mat loadResource(com.example.hack123.MainActivity context, int resourceId) throws IOException
     {
         return loadResource(context, resourceId, -1);
     }

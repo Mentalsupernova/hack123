@@ -1,10 +1,12 @@
 package com.example.hack123;
 
+import android.content.Context;
 import android.graphics.Bitmap;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
@@ -13,8 +15,10 @@ import org.opencv.imgproc.Imgproc;
 
 import java.io.IOException;
 
-public class MainActivity extends AppCompatActivity {
 
+
+public class MainActivity extends AppCompatActivity {
+    private static Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,9 +29,9 @@ public class MainActivity extends AppCompatActivity {
     public void displayToast(View v){
 
         Mat img = null;
-
+        MainActivity.context = getApplicationContext();
         try {
-            img = Utils.loadResource(getApplicationContext(), R.drawable.ic_launcher_background);
+            img = Utils.loadResource(MainActivity.context,R.drawable.test);
         } catch (IOException e) {
             e.printStackTrace();
         }
