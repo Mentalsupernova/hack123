@@ -1,113 +1,43 @@
 package com.example.hack123;
 
+import android.graphics.Bitmap;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.SurfaceView;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.ImageView;
 
-import org.opencv.android.BaseLoaderCallback;
-import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.android.JavaCameraView;
 import org.opencv.android.OpenCVLoader;
-import org.opencv.core.Core;
+import org.opencv.android.Utils;
 import org.opencv.core.Mat;
-import org.opencv.*;
 import org.opencv.imgproc.Imgproc;
 
+import java.io.IOException;
 
-import java.util.Random;
-
-
-
-public class MainActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
-    int counter = 0;
-    private CameraBridgeViewBase mOpenCvCameraView;
-
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-    BaseLoaderCallback loaderm = new BaseLoaderCallback() {
-        @Override
-        public void onManagerConnected(int status) {
-            super.onManagerConnected(status);
-        }
+        OpenCVLoader.initDebug();
     }
 
+    public void displayToast(View v){
 
-    }
+        Mat img = null;
 
-    @Override
-    public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-
-        Mat frame = inputFrame.rgba();
-
-        if (counter % 2 == 0){
-
-            Core.flip(frame, frame, 1);
-            Imgproc.cvtColor(frame, frame, Imgproc.COLOR_RGBA2GRAY);
-
-
+        try {
+            img = Utils.loadResource(getApplicationContext(), R.drawable.ic_launcher_background);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        counter = counter + 1;
+        Imgproc.cvtColor(img, img, Imgproc.COLOR_RGB2BGRA);
 
-
-
-
-
-
-        return frame;
-    }
-
-
-    @Override
-    public void onCameraViewStarted(int width, int height) {
-
-    }
-
-
-    @Override
-    public void onCameraViewStopped() {
-
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (!OpenCVLoader.initDebug()){
-            Toast.makeText(getApplicationContext(),"There's a problem, yo!", Toast.LENGTH_SHORT).show();
-        }
-
-        else
-        {
-            baseLoaderCallback.onManagerConnected(baseLoaderCallback.SUCCESS);
-        }
-
-
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if(cameraBridgeViewBase!=null){
-
-            cameraBridgeViewBase.disableView();
-        }
-
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (cameraBridgeViewBase!=null){
-            cameraBridgeViewBase.disableView();
-        }
+        Mat img_result = img.clone();
+        Imgproc.Canny(img, img_result, 80, 90);
+        Bitmap img_bitmap = Bitmap.createBitmap(img_result.cols(), img_result.rows(),Bitmap.Config.ARGB_8888);
+        ImageView imageView = findViewById(R.id.img);
+        imageView.setImageBitmap(img_bitmap);
     }
 }
