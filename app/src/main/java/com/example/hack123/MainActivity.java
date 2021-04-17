@@ -1,47 +1,138 @@
 package com.example.hack123;
 
-import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageView;
+import android.view.SurfaceView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.CameraBridgeViewBase;
+import org.opencv.android.JavaCameraView;
 import org.opencv.android.OpenCVLoader;
-import org.opencv.android.Utils;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
-import java.io.IOException;
 
 
 
-public class MainActivity extends AppCompatActivity {
-    private static Context context;
+
+
+
+public class MainActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
+
+    CameraBridgeViewBase cameraBridgeViewBase;
+    BaseLoaderCallback baseLoaderCallback;
+    int counter = 0;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        OpenCVLoader.initDebug();
+
+
+        cameraBridgeViewBase = (JavaCameraView)findViewById(R.id.CameraView);
+        cameraBridgeViewBase.setVisibility(SurfaceView.VISIBLE);
+        cameraBridgeViewBase.setCvCameraViewListener(this);
+
+
+        //System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        baseLoaderCallback = new BaseLoaderCallback(this) {
+            @Override
+            public void onManagerConnected(int status) {
+                super.onManagerConnected(status);
+
+                switch(status){
+
+                    case BaseLoaderCallback.SUCCESS:
+                        cameraBridgeViewBase.enableView();
+                        break;
+                    default:
+                        super.onManagerConnected(status);
+                        break;
+                }
+
+
+            }
+
+        };
+
+
+
+
     }
 
-    public void displayToast(View v){
+    @Override
+    public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
 
-        Mat img = null;
-        MainActivity.context = getApplicationContext();
-        try {
-            img = Utils.loadResource(this,R.drawable.ic_launcher_background);
-        } catch (IOException e) {
-            e.printStackTrace();
+        Mat frame = inputFrame.rgba();
+
+        if (counter % 2 == 0){
+
+            Core.flip(frame, frame, 1);
+            Imgproc.cvtColor(frame, frame, Imgproc.COLOR_RGBA2GRAY);
+
+
         }
 
-        Imgproc.cvtColor(img, img, Imgproc.COLOR_RGB2BGRA);
+        counter = counter + 1;
 
-        Mat img_result = img.clone();
-        Imgproc.Canny(img, img_result, 80, 90);
-        Bitmap img_bitmap = Bitmap.createBitmap(img_result.cols(), img_result.rows(),Bitmap.Config.ARGB_8888);
-        ImageView imageView = findViewById(R.id.img);
-        imageView.setImageBitmap(img_bitmap);
+
+
+
+
+
+        return frame;
+    }
+
+
+    @Override
+    public void onCameraViewStarted(int width, int height) {
+
+    }
+
+
+    @Override
+    public void onCameraViewStopped() {
+
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (!OpenCVLoader.initDebug()){
+            Toast.makeText(getApplicationContext(),"There's a problem, yo!", Toast.LENGTH_SHORT).show();
+        }
+
+        else
+        {
+            baseLoaderCallback.onManagerConnected(baseLoaderCallback.SUCCESS);
+        }
+
+
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(cameraBridgeViewBase!=null){
+
+            cameraBridgeViewBase.disableView();
+        }
+
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (cameraBridgeViewBase!=null){
+            cameraBridgeViewBase.disableView();
+        }
     }
 }
