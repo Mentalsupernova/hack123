@@ -6,9 +6,9 @@
 6
 7    <uses-sdk
 7-->/home/utsu/AndroidStudioProjects/hack123/openCVLibrary341/src/main/AndroidManifest.xml:7:5-73
-8        android:minSdkVersion="8"
+8        android:minSdkVersion="16"
 8-->/home/utsu/AndroidStudioProjects/hack123/openCVLibrary341/src/main/AndroidManifest.xml:7:15-40
-9        android:targetSdkVersion="21" />
+9        android:targetSdkVersion="30" />
 9-->/home/utsu/AndroidStudioProjects/hack123/openCVLibrary341/src/main/AndroidManifest.xml:7:41-70
 10
 11</manifest>

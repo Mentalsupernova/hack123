@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         Mat img = null;
         MainActivity.context = getApplicationContext();
         try {
-            img = Utils.loadResource(MainActivity.context,R.drawable.test);
+            img = Utils.loadResource(this,R.drawable.ic_launcher_background);
         } catch (IOException e) {
             e.printStackTrace();
         }
