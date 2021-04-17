@@ -1,6 +1,6 @@
-package com.example.hack123.;
+package com.example.hack123;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.SurfaceView;
 import android.widget.Toast;
@@ -19,15 +19,9 @@ import java.util.Random;
 
 
 
-
-
-
-
 public class MainActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
-
-    CameraBridgeViewBase cameraBridgeViewBase;
-    BaseLoaderCallback baseLoaderCallback;
     int counter = 0;
+    private CameraBridgeViewBase mOpenCvCameraView;
 
 
     @Override
@@ -35,34 +29,12 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        cameraBridgeViewBase = (JavaCameraView)findViewById(R.id.CameraView);
-        cameraBridgeViewBase.setVisibility(SurfaceView.VISIBLE);
-        cameraBridgeViewBase.setCvCameraViewListener(this);
-
-
-        //System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        baseLoaderCallback = new BaseLoaderCallback(this) {
-            @Override
-            public void onManagerConnected(int status) {
-                super.onManagerConnected(status);
-
-                switch(status){
-
-                    case BaseLoaderCallback.SUCCESS:
-                        cameraBridgeViewBase.enableView();
-                        break;
-                    default:
-                        super.onManagerConnected(status);
-                        break;
-                }
-
-
-            }
-
-        };
-
-
+    BaseLoaderCallback loaderm = new BaseLoaderCallback() {
+        @Override
+        public void onManagerConnected(int status) {
+            super.onManagerConnected(status);
+        }
+    }
 
 
     }

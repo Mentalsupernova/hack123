@@ -2,7 +2,6 @@ package org.opencv.android;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.util.Log;
@@ -12,8 +11,12 @@ import android.util.Log;
  */
 public abstract class BaseLoaderCallback implements LoaderCallbackInterface {
 
-    public BaseLoaderCallback(Context AppContext) {
+    public BaseLoaderCallback(com.example.hack123.MainActivity AppContext) {
         mAppContext = AppContext;
+    }
+
+    public BaseLoaderCallback() {
+
     }
 
     public void onManagerConnected(int status)
@@ -136,6 +139,6 @@ public abstract class BaseLoaderCallback implements LoaderCallbackInterface {
         ((Activity) mAppContext).finish();
     }
 
-    protected Context mAppContext;
+    protected com.example.hack123.MainActivity mAppContext;
     private final static String TAG = "OpenCVLoader/BaseLoaderCallback";
 }
